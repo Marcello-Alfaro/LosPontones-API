@@ -14,6 +14,6 @@ export const {
 
 export const CORS_OPTIONS = {
   origin: CORS_ORIGIN,
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'PUT'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
