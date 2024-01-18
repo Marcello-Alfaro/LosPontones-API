@@ -1,6 +1,6 @@
 import busboy from 'busboy';
 import fs from 'fs';
-import { API_URL } from '../config/config.js';
+import { API_URL, API_PATH } from '../config/config.js';
 import { pipeline } from 'stream/promises';
 import { v4 as uuidv4 } from 'uuid';
 import Athlete from '../models/athlete.js';
@@ -37,7 +37,7 @@ export default {
         if (!/image/.test(mimeType)) return file.resume();
 
         const photoName = `${uuidv4()}.${mimeType.split('/')[1]}`;
-        payment.set({ evidence: `${API_URL}/images/evidence/${photoName}` });
+        payment.set({ evidence: `${API_URL + API_PATH}/images/evidence/${photoName}` });
         await pipeline(file, fs.createWriteStream(`public/images/evidence/${photoName}`));
       });
 

@@ -1,6 +1,7 @@
 export const {
   PORT,
   API_URL,
+  API_PATH,
   JWT_SECRET,
   CORS_ORIGIN,
   DB_DATABASE,

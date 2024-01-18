@@ -1,4 +1,4 @@
-import { API_URL } from '../config/config.js';
+import { API_URL, API_PATH } from '../config/config.js';
 import Athlete from '../models/athlete.js';
 import { pipeline } from 'stream/promises';
 import busboy from 'busboy';
@@ -63,7 +63,7 @@ export default {
         if (!/image/.test(mimeType)) return file.resume();
 
         const photoName = `${uuidv4()}.${mimeType.split('/')[1]}`;
-        athlete.set({ photo: `${API_URL}/images/photos/${photoName}` });
+        athlete.set({ photo: `${API_URL + API_PATH}/images/photos/${photoName}` });
         await pipeline(file, fs.createWriteStream(`public/images/photos/${photoName}`));
       });
 

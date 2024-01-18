@@ -1,4 +1,4 @@
-import { PORT, CORS_OPTIONS } from './config/config.js';
+import { API_PATH, PORT, CORS_OPTIONS } from './config/config.js';
 import express from 'express';
 import './models/associations.js';
 import sequelize from './database/connection.js';
@@ -20,8 +20,8 @@ try {
   app.use(compression());
   app.use(helmet({ crossOriginResourcePolicy: false }));
   app.use(cors(CORS_OPTIONS));
-  app.use(express.static('public'));
-  app.use(indexRoutes);
+  app.use(API_PATH, express.static('public'));
+  app.use(API_PATH, indexRoutes);
   app.use(errorHandler);
 
   await sequelize.authenticate();

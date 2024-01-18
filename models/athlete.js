@@ -1,4 +1,3 @@
-import { API_URL } from '../config/config.js';
 import sequelize from '../database/connection.js';
 import { DataTypes } from 'sequelize';
 
