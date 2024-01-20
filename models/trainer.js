@@ -10,9 +10,12 @@ const Trainer = sequelize.define(
       autoIncrement: true,
     },
     trainerId: {
-      type: DataTypes.UUID,
+      type: DataTypes.DOUBLE,
+      unique: true,
       allowNull: false,
-      defaultValue: DataTypes.UUIDV4,
+    },
+    photo: {
+      type: DataTypes.STRING,
     },
     name: {
       type: DataTypes.STRING,

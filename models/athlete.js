@@ -53,6 +53,11 @@ const Athlete = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    free: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     entryDate: {
       type: DataTypes.DATEONLY,
       allowNull: false,

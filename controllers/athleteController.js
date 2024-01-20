@@ -2,7 +2,7 @@ import { API_URL, API_PATH } from '../config/config.js';
 import Athlete from '../models/athlete.js';
 import { pipeline } from 'stream/promises';
 import busboy from 'busboy';
-import fs from 'fs';
+import fs from 'fs-extra';
 import { v4 as uuidv4 } from 'uuid';
 import ErrorObject from '../helpers/errorObject.js';
 import Trainer from '../models/trainer.js';
@@ -63,6 +63,9 @@ export default {
         if (!/image/.test(mimeType)) return file.resume();
 
         const photoName = `${uuidv4()}.${mimeType.split('/')[1]}`;
+        if (athlete.photo)
+          await fs.remove(`public/images/photos/${athlete.photo.split('/').pop()}`);
+
         athlete.set({ photo: `${API_URL + API_PATH}/images/photos/${photoName}` });
         await pipeline(file, fs.createWriteStream(`public/images/photos/${photoName}`));
       });

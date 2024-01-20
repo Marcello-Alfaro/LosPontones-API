@@ -4,6 +4,7 @@ import trainerControlller from '../controllers/trainerControlller.js';
 const router = express.Router();
 
 router.get('/', authorization, trainerControlller.getTrainers);
+router.get('/:trainerId', authorization, trainerControlller.getTrainer);
 router.post('/add', authorization, trainerControlller.postAddTrainer);
 
 export default router;

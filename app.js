@@ -8,13 +8,13 @@ import errorHandler from './middlewares/errorHandler.js';
 import User from './models/user.js';
 import helmet from 'helmet';
 import cors from 'cors';
-import fsp from 'fs/promises';
+import fs from 'fs-extra';
 
 try {
   const app = express();
 
-  await fsp.mkdir('public/images/photos', { recursive: true });
-  await fsp.mkdir('public/images/evidence', { recursive: true });
+  await fs.mkdirp('public/images/photos');
+  await fs.mkdirp('public/images/evidence');
 
   app.use(express.json());
   app.use(compression());
