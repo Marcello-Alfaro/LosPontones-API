@@ -1,4 +1,4 @@
-import { API_PATH, PORT, CORS_OPTIONS } from './config/config.js';
+import { API_PATH, PORT, CORS_OPTIONS, DEFAULT_ADMIN_USER } from './config/config.js';
 import express from 'express';
 import './models/associations.js';
 import sequelize from './database/connection.js';
@@ -8,19 +8,17 @@ import errorHandler from './middlewares/errorHandler.js';
 import User from './models/user.js';
 import helmet from 'helmet';
 import cors from 'cors';
-import fs from 'fs-extra';
+import Socket from './socket.js';
+import storageServerStatus from './middlewares/storageServerStatus.js';
 
 try {
   const app = express();
-
-  await fs.mkdirp('public/images/photos');
-  await fs.mkdirp('public/images/evidence');
 
   app.use(express.json());
   app.use(compression());
   app.use(helmet({ crossOriginResourcePolicy: false }));
   app.use(cors(CORS_OPTIONS));
-  app.use(API_PATH, express.static('public'));
+  app.use(storageServerStatus);
   app.use(API_PATH, indexRoutes);
   app.use(errorHandler);
 
@@ -30,17 +28,12 @@ try {
 
   await User.findOrCreate({
     where: { username: 'alfaro4564' },
-    defaults: {
-      isAdmin: true,
-      username: 'alfaro4564',
-      email: 'pikebshp13@gmail.com',
-      password: '$2a$10$.HBkuc7vn.8eyykGRwRZjepZtsW26JPtWA695yFHeckJuIUrL2Wl6',
-      name: 'Jake',
-      lastname: 'Gittes',
-    },
+    defaults: DEFAULT_ADMIN_USER,
   });
 
-  app.listen(PORT ?? 3000, console.log(`Server started on port ${PORT}`));
+  const server = app.listen(PORT ?? 3000, console.log(`Server started on port ${PORT}`));
+
+  Socket.init(server);
 
   process.on('uncaughtException', (err) => console.error(err));
 } catch (err) {

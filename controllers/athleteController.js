@@ -2,12 +2,13 @@ import { API_URL, API_PATH } from '../config/config.js';
 import Athlete from '../models/athlete.js';
 import { pipeline } from 'stream/promises';
 import busboy from 'busboy';
-import fs from 'fs-extra';
 import { v4 as uuidv4 } from 'uuid';
 import ErrorObject from '../helpers/errorObject.js';
 import Trainer from '../models/trainer.js';
 import Contact from '../models/contact.js';
 import Payment from '../models/payment.js';
+import Socket from '../socket.js';
+import Image from '../helpers/image.js';
 
 export default {
   async getAtheletes(_, res, next) {
@@ -62,12 +63,18 @@ export default {
       bb.on('file', async (_, file, { mimeType }) => {
         if (!/image/.test(mimeType)) return file.resume();
 
-        const photoName = `${uuidv4()}.${mimeType.split('/')[1]}`;
+        const imageName = `${uuidv4()}.${mimeType.split('/')[1]}`;
         if (athlete.photo)
-          await fs.remove(`public/images/photos/${athlete.photo.split('/').pop()}`);
+          Socket.serverSocket.emit('remove-image', {
+            location: 'photos',
+            name: athlete.photo.split('/').pop(),
+          });
 
-        athlete.set({ photo: `${API_URL + API_PATH}/images/photos/${photoName}` });
-        await pipeline(file, fs.createWriteStream(`public/images/photos/${photoName}`));
+        athlete.set({ photo: `${API_URL + API_PATH}/images/photos/${imageName}` });
+
+        const { id, location, name } = new Image(file, imageName, 'photos');
+        req.imageId = id;
+        Socket.serverSocket.emit('store-image', { id, location, name });
       });
 
       bb.on('field', (name, value) => athlete.set({ [name]: value }));
