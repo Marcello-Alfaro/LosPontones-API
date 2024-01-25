@@ -27,7 +27,7 @@ try {
   await sequelize.sync();
 
   await User.findOrCreate({
-    where: { username: 'alfaro4564' },
+    where: { username: DEFAULT_ADMIN_USER.username },
     defaults: DEFAULT_ADMIN_USER,
   });
 

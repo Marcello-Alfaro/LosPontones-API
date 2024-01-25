@@ -9,8 +9,9 @@ export const {
   DB_PASSWORD,
   DB_HOST,
   DB_DIALECT,
-  DEFAULT_ADMIN_USER,
 } = process.env;
+
+export const DEFAULT_ADMIN_USER = JSON.parse(process.env.DEFAULT_ADMIN_USER);
 
 export const CORS_OPTIONS = {
   origin: CORS_ORIGIN,
